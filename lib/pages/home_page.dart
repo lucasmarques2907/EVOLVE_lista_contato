@@ -21,43 +21,21 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.signOut();
   }
 
-  Stream? contatoStream;
+  String name = "";
 
-  infoAoCarregar() async {
-    contatoStream = await DatabaseMethods().getDetalhesContato();
+  List<Map<String, dynamic>> listaContatos = [];
+
+  addContato() async {
+    for (var element in listaContatos) {
+      FirebaseFirestore.instance.collection("Contato").add(element);
+    }
+    print("todos os contatos foram adicionados");
   }
 
   @override
   void initState() {
-    infoAoCarregar();
     super.initState();
-  }
-
-  StreamBuilder<dynamic> buildStreamBuilder() {
-    return StreamBuilder(
-      stream: contatoStream,
-      builder: (context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot contato =
-                snapshot.data!.docs[index];
-                return Material(
-                  child: ListTile(
-                    title: Text(
-                      contato["Nome"],
-                    ),
-                    subtitle: Text(contato["Celular"]),
-                  ),
-                );
-              });
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
+    addContato();
   }
 
   @override
@@ -81,12 +59,25 @@ class _HomePageState extends State<HomePage> {
         ],
         backgroundColor: Colors.black,
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddContact(),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             TextField(
                 onChanged: (value) => setState(() {
-                      print(value);
+                      name = value;
                     }),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -116,27 +107,45 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: buildStreamBuilder(),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("Contato")
+                      .where("UsuarioEmail", isEqualTo: usuarioAtual!.email!)
+                      .snapshots(),
+                  builder: (context, snapshots) {
+                    return (snapshots.connectionState ==
+                            ConnectionState.waiting)
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ListView.builder(
+                            itemCount: snapshots.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              var data = snapshots.data!.docs[index].data()
+                                  as Map<String, dynamic>;
+
+                              if (name.trim().isEmpty) {
+                                return ListTile(
+                                  title: Text(data["Nome"], style: TextStyle(color: Colors.white),),
+                                  subtitle: Text(data["Celular"], style:  TextStyle(color: Colors.white),),
+                                );
+                              }
+                              if (data["Nome"].toString().toLowerCase()
+                                  .toString()
+                                  .startsWith(name.toLowerCase())||data["Nome"].toString().toLowerCase().contains(name.toLowerCase())) {
+                                return ListTile(
+                                  title: Text(data["Nome"], style: TextStyle(color: Colors.white),),
+                                  subtitle: Text(data["Celular"], style:  TextStyle(color: Colors.white),),
+                                );
+                              }
+                              return Container();
+                            });
+                  },
+                ),
               ),
-            ),
-            SizedBox(
-              height: 75,
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddContact(),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
       ),
     );
   }
