@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:lista_contatos/pages/add_contact.dart';
 import 'package:lista_contatos/pages/contact_page.dart';
+import 'package:lista_contatos/service/firestore.dart';
 import '../models/contact_model.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,41 +15,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static List<ContactModel> Contacts = [
-    ContactModel("1", "Rafael Raul Kevin das Neves", "(63)998301192"),
-    ContactModel("2", "César Juan Moura", "(27)991977857"),
-    ContactModel("3", "Liz Carolina Brito", "(21)997754316"),
-    ContactModel("4", "Gabriela Eduarda Galvão", "(98)998491898"),
-    ContactModel("5", "Clara Ester Corte Real", "(38)99192-7962"),
-  ];
+  final usuarioAtual = FirebaseAuth.instance.currentUser;
 
-  List<ContactModel> foundContacts = [];
+  void deslogarUsuario() {
+    FirebaseAuth.instance.signOut();
+  }
+
+  Stream? contatoStream;
+
+  infoAoCarregar() async {
+    contatoStream = await DatabaseMethods().getDetalhesContato();
+  }
 
   @override
   void initState() {
-    foundContacts = Contacts;
+    infoAoCarregar();
     super.initState();
   }
 
-  void _runSearch(String enteredKeyword) {
-    List<ContactModel> results = [];
-    if (enteredKeyword.trim().isEmpty) {
-      results = Contacts;
-    } else {
-      results = Contacts.where((contacts) =>
-      contacts.username
-          .toLowerCase()
-          .contains(enteredKeyword.toLowerCase()) ||
-          contacts.phone.contains(enteredKeyword)).toList();
-    }
-
-    setState(() {
-      foundContacts = results;
-    });
-  }
-
-  void deslogarUsuario(){
-    FirebaseAuth.instance.signOut();
+  StreamBuilder<dynamic> buildStreamBuilder() {
+    return StreamBuilder(
+      stream: contatoStream,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot contato =
+                snapshot.data!.docs[index];
+                return Material(
+                  child: ListTile(
+                    title: Text(
+                      contato["Nome"],
+                    ),
+                    subtitle: Text(contato["Celular"]),
+                  ),
+                );
+              });
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 
   @override
@@ -62,7 +72,12 @@ class _HomePageState extends State<HomePage> {
             fontSize: 21,
             fontWeight: FontWeight.bold),
         actions: [
-          IconButton(onPressed: deslogarUsuario, icon: const Icon(Icons.logout, color: Colors.white,))
+          IconButton(
+              onPressed: deslogarUsuario,
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ))
         ],
         backgroundColor: Colors.black,
       ),
@@ -70,14 +85,16 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             TextField(
-                onChanged: (value) => _runSearch(value),
+                onChanged: (value) => setState(() {
+                      print(value);
+                    }),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.shade700,
                   hintText: "Pesquisar contato",
                   hintStyle:
-                  TextStyle(fontSize: 17, color: Colors.grey.shade500),
+                      TextStyle(fontSize: 17, color: Colors.grey.shade500),
                   suffixIcon: const Icon(
                     Icons.search,
                     size: 26,
@@ -99,39 +116,7 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  itemCount: foundContacts.length,
-                  itemBuilder: (context, index) => Card(
-                    key: ValueKey(foundContacts[index].id),
-                    color: Colors.grey.shade800,
-                    elevation: 4,
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    child: ListTile(
-                      leading: ProfilePicture(
-                        name: foundContacts[index].username,
-                        radius: 25,
-                        fontsize: 21,
-                        count: 1,
-                      ),
-                      title: Text(
-                        foundContacts[index].username,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        foundContacts[index].phone,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ContactPage(id: foundContacts[index].id, contacts: foundContacts),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                child: buildStreamBuilder(),
               ),
             ),
             SizedBox(

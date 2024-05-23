@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lista_contatos/components/my_textfield.dart';
 
 class AddContact extends StatefulWidget {
-  const AddContact({super.key});
+  final String? usuarioAtual;
+
+  const AddContact({super.key, this.usuarioAtual});
 
   @override
   State<AddContact> createState() => _AddContactState();
@@ -22,6 +26,24 @@ class _AddContactState extends State<AddContact> {
   void dispose() {
     nomeController.dispose();
     super.dispose();
+  }
+
+  final usuarioAtual = FirebaseAuth.instance.currentUser;
+
+  void salvarContato() {
+    FirebaseFirestore.instance.collection("Contato").add({
+      "UsuarioEmail": usuarioAtual!.email!,
+      "Nome": nomeController.text,
+      "Celular": celularController.text,
+      "CEP": cepController.text,
+      "UF": estadoController.text,
+      "Cidade": cidadeController.text,
+      "Bairro": bairroController.text,
+      "Rua": ruaController.text,
+      "Complemento": complementoController.text,
+      "DataCriacao": Timestamp.now(),
+    });
+    Navigator.pop(context);
   }
 
   @override
@@ -157,9 +179,7 @@ class _AddContactState extends State<AddContact> {
                   ),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        print("salvar");
-                      },
+                      onPressed: salvarContato,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.purple[500]),
                       child: Text(

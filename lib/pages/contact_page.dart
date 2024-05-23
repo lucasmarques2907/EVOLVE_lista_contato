@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../models/contact_model.dart';
 
-class ContactPage extends StatelessWidget {
+class ContactPage extends StatefulWidget {
   final String id;
 
   final List<ContactModel> contacts;
@@ -12,9 +12,14 @@ class ContactPage extends StatelessWidget {
   ContactPage({super.key, required this.id, required this.contacts});
 
   @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  @override
   Widget build(BuildContext context) {
     // Buscar o contato usando o ID
-    final ContactModel contact = contacts.firstWhere((contact) => contact.id == id);
+    final ContactModel contact = widget.contacts.firstWhere((contact) => contact.id == widget.id);
 
     return Scaffold(
       backgroundColor: Colors.grey[900],
