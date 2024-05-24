@@ -24,19 +24,20 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: senhaController.text,
-      );
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
-      if (e.code == "invalid-credential") {
-        mostrarMsgErro("Login incorreto");
-      } else if (e.code == "invalid-email") {
-        mostrarMsgErro("Email inválido");
+    if (mounted) {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: senhaController.text,
+        );
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
+        if (e.code == "invalid-credential") {
+          mostrarMsgErro("Login incorreto");
+        } else if (e.code == "invalid-email") {
+          mostrarMsgErro("Email inválido");
+        }
       }
     }
   }

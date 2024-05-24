@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:lista_contatos/pages/add_contact.dart';
 import 'package:lista_contatos/pages/contact_page.dart';
-import 'package:lista_contatos/service/firestore.dart';
-import '../models/contact_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,21 +20,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   String name = "";
-
-  List<Map<String, dynamic>> listaContatos = [];
-
-  addContato() async {
-    for (var element in listaContatos) {
-      FirebaseFirestore.instance.collection("Contato").add(element);
-    }
-    print("todos os contatos foram adicionados");
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    addContato();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("Contato")
-                      .where("UsuarioEmail", isEqualTo: usuarioAtual!.email!)
+                      .where("usuarioEmail", isEqualTo: usuarioAtual!.email!)
                       .snapshots(),
                   builder: (context, snapshots) {
                     return (snapshots.connectionState ==
@@ -123,19 +106,56 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               var data = snapshots.data!.docs[index].data()
                                   as Map<String, dynamic>;
-
                               if (name.trim().isEmpty) {
                                 return ListTile(
-                                  title: Text(data["Nome"], style: TextStyle(color: Colors.white),),
-                                  subtitle: Text(data["Celular"], style:  TextStyle(color: Colors.white),),
+                                  title: Text(
+                                    data["nome"],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    data["celular"],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ContactPage(
+                                          id: data["id"].toString(),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               }
-                              if (data["Nome"].toString().toLowerCase()
-                                  .toString()
-                                  .startsWith(name.toLowerCase())||data["Nome"].toString().toLowerCase().contains(name.toLowerCase())) {
+                              if (data["nome"]
+                                      .toString()
+                                      .toLowerCase()
+                                      .toString()
+                                      .startsWith(name.toLowerCase()) ||
+                                  data["nome"]
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(name.toLowerCase())) {
                                 return ListTile(
-                                  title: Text(data["Nome"], style: TextStyle(color: Colors.white),),
-                                  subtitle: Text(data["Celular"], style:  TextStyle(color: Colors.white),),
+                                  title: Text(
+                                    data["nome"],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    data["celular"],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ContactPage(
+                                          id: data["id"].toString(),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 );
                               }
                               return Container();

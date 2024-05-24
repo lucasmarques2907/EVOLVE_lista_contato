@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lista_contatos/components/my_textfield.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class AddContact extends StatefulWidget {
   final String? usuarioAtual;
@@ -30,20 +33,37 @@ class _AddContactState extends State<AddContact> {
 
   final usuarioAtual = FirebaseAuth.instance.currentUser;
 
-  void salvarContato() {
-    FirebaseFirestore.instance.collection("Contato").add({
-      "UsuarioEmail": usuarioAtual!.email!,
-      "Nome": nomeController.text,
-      "Celular": celularController.text,
-      "CEP": cepController.text,
-      "UF": estadoController.text,
-      "Cidade": cidadeController.text,
-      "Bairro": bairroController.text,
-      "Rua": ruaController.text,
-      "Complemento": complementoController.text,
-      "DataCriacao": Timestamp.now(),
-    });
+  Future<void> salvarContato() async {
+    final docContato = FirebaseFirestore.instance.collection("Contato").doc();
+
+    String? id = docContato.id;
+
+    await docContato.set({'id': id, "usuarioEmail": usuarioAtual!.email!, "nome": nomeController.text, "celular": celularController.text, "cep": cepController.text, "uf": estadoController.text, "cidade": cidadeController.text, "bairro": bairroController.text, "rua": ruaController.text, "complemento": complementoController.text, "dataCriacao": Timestamp.now()});
     Navigator.pop(context);
+  }
+
+  String resultado = "";
+
+  void buscaCep(String value) async{
+    String cep = value;
+
+    String url = "https://viacep.com.br/ws/$cep/json/";
+
+    http.Response resposta;
+
+    resposta = await http.get(Uri.parse(url));
+
+    print("Resposta: " + resposta.body);
+
+    print("StatusCode: "+ resposta.statusCode.toString());
+
+    Map<String, dynamic> dadosCep = json.decode(resposta.body);
+
+    estadoController.text = dadosCep["uf"];
+    cidadeController.text = dadosCep["localidade"];
+    bairroController.text = dadosCep["bairro"];
+    ruaController.text = dadosCep["logradouro"];
+    complementoController.text = dadosCep["complemento"];
   }
 
   @override
@@ -98,12 +118,47 @@ class _AddContactState extends State<AddContact> {
                     SizedBox(
                       height: 5,
                     ),
-                    MyTextfield(
-                      controller: cepController,
-                      hintText: "CEP",
-                      obscureText: false,
-                      icon: Icons.add_location,
-                    ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            controller: cepController,
+            onChanged: (value) async {
+              if (value.length == 8){
+                buscaCep(value);
+              }
+            },
+            obscureText: false,
+            style: TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.purple.shade500,
+                ),
+              ),
+              prefixIcon: Icon(
+                Icons.location_on,
+                color: Colors.white,
+              ),
+              fillColor: Colors.grey.shade800,
+              filled: true,
+              hintText: "CEP",
+              hintStyle: TextStyle(color: Colors.grey[500]),
+            ),
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+          ),
+        ),
                     SizedBox(
                       height: 5,
                     ),
