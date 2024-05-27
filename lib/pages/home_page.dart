@@ -24,14 +24,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.black54,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Home"),
+        title: Text("Contatos"),
         titleTextStyle: TextStyle(
-            color: Colors.purple.shade300,
-            fontSize: 21,
-            fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold),
         actions: [
           IconButton(
               onPressed: deslogarUsuario,
@@ -43,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.black,
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.purple,
+        backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(
@@ -65,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.grey.shade700,
+                  fillColor: Colors.grey[800],
                   hintText: "Pesquisar contato",
                   hintStyle:
                       TextStyle(fontSize: 17, color: Colors.grey.shade500),
@@ -89,7 +87,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection("Contato")
@@ -99,7 +97,9 @@ class _HomePageState extends State<HomePage> {
                     return (snapshots.connectionState ==
                             ConnectionState.waiting)
                         ? Center(
-                            child: CircularProgressIndicator(),
+                            child: CircularProgressIndicator(
+                              color: Colors.deepPurple,
+                            ),
                           )
                         : ListView.builder(
                             itemCount: snapshots.data!.docs.length,
@@ -108,9 +108,18 @@ class _HomePageState extends State<HomePage> {
                                   as Map<String, dynamic>;
                               if (name.trim().isEmpty) {
                                 return ListTile(
+                                  splashColor: Colors.deepPurple,
+                                  leading: ProfilePicture(
+                                    name: data["nome"],
+                                    radius: 20,
+                                    fontsize: 18,
+                                  ),
                                   title: Text(
                                     data["nome"],
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis),
                                   ),
                                   subtitle: Text(
                                     data["celular"],
@@ -126,6 +135,12 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     );
                                   },
+                                  tileColor: Colors.grey.shade900,
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                        color: Colors.deepPurple, width: 2),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 );
                               }
                               if (data["nome"]

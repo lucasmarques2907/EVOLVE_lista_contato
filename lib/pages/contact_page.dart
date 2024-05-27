@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lista_contatos/pages/edit_contact.dart';
 import 'package:lista_contatos/service/database.dart';
 
 class ContactPage extends StatefulWidget {
   final String id;
 
-  ContactPage({super.key, required this.id});
+  const ContactPage({super.key, required this.id});
 
   @override
   State<ContactPage> createState() => _ContactPageState();
@@ -26,7 +27,7 @@ class _ContactPageState extends State<ContactPage> {
             labelStyle: TextStyle(color: Colors.grey.shade400),
             border: InputBorder.none,
             suffixIcon: GestureDetector(
-              child: Icon(Icons.copy, color: Colors.purple.shade300),
+              child: Icon(Icons.copy, color: Colors.deepPurple),
               onTap: () async {
                 await Clipboard.setData(ClipboardData(text: content));
                 Fluttertoast.showToast(
@@ -34,7 +35,7 @@ class _ContactPageState extends State<ContactPage> {
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.CENTER,
                   timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.purple.shade600,
+                  backgroundColor: Colors.deepPurple,
                   textColor: Colors.white,
                   fontSize: 16,
                 );
@@ -56,9 +57,13 @@ class _ContactPageState extends State<ContactPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.purple.shade300),
+          icon: Icon(Icons.arrow_back, color: Colors.deepPurple),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        centerTitle: true,
+        title: Text("Detalhes"),
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold),
         backgroundColor: Colors.black,
       ),
       body: SafeArea(
@@ -74,10 +79,13 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                 ),
                 child: StreamBuilder<QuerySnapshot>(
-                  stream:
-                      FirebaseFirestore.instance.collection("Contato").snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection("Contato")
+                      .where("id", isEqualTo: widget.id)
+                      .snapshots(),
                   builder: (context, snapshots) {
-                    return (snapshots.connectionState == ConnectionState.waiting)
+                    return (snapshots.connectionState ==
+                            ConnectionState.waiting)
                         ? Center(
                             child: CircularProgressIndicator(),
                           )
@@ -90,7 +98,7 @@ class _ContactPageState extends State<ContactPage> {
                               if (data['id'].trim().isNotEmpty) {
                                 return Column(
                                   children: [
-                                    SizedBox(height: 25),
+                                    SizedBox(height: 20),
                                     Center(
                                       child: ProfilePicture(
                                         name: data["nome"],
@@ -100,13 +108,17 @@ class _ContactPageState extends State<ContactPage> {
                                       ),
                                     ),
                                     SizedBox(height: 15),
-                                    Text(
-                                      data["nome"],
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      child: Text(
+                                        data["nome"],
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
                                     SizedBox(height: 5),
                                     Text(
@@ -142,6 +154,9 @@ class _ContactPageState extends State<ContactPage> {
                                         _buildInfoContainer(
                                             context, "Rua", data["rua"]),
                                         SizedBox(height: 5),
+                                        _buildInfoContainer(
+                                            context, "Número", data["numero"]),
+                                        SizedBox(height: 5),
                                         _buildInfoContainer(context,
                                             "Complemento", data["complemento"]),
                                         SizedBox(height: 5),
@@ -150,6 +165,7 @@ class _ContactPageState extends State<ContactPage> {
                                   ],
                                 );
                               }
+                              return Container();
                             });
                   },
                 ),
@@ -163,10 +179,13 @@ class _ContactPageState extends State<ContactPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        DatabaseMethods().excluirContato(widget.id, context);
+                        // DatabaseMethods().excluirContato(widget.id, context);
+                        showDialog(
+                            context: context,
+                            builder: (context) => CustomDialogWidget(id: widget.id.toString()));
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[500]),
+                          backgroundColor: Colors.redAccent),
                       child: Text(
                         "Excluir",
                         style: TextStyle(color: Colors.white),
@@ -178,11 +197,18 @@ class _ContactPageState extends State<ContactPage> {
                   ),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditContact(
+                              id: widget.id.toString(),
+                            ),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple[500]),
+                          backgroundColor: Colors.deepPurple),
                       child: Text(
                         "Editar",
                         style: TextStyle(color: Colors.white),
@@ -192,6 +218,90 @@ class _ContactPageState extends State<ContactPage> {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomDialogWidget extends StatelessWidget {
+
+  final String id;
+
+  const CustomDialogWidget({super.key,required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 15,),
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.person_remove,
+              size: 72,
+              color: Colors.redAccent,
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Text(
+              "Atenção!",
+              style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            const Text(
+              "Deseja excluir este contato permanentemente?",
+              textAlign: TextAlign.center,
+              style:
+                  TextStyle(fontWeight: FontWeight.w300, color: Colors.white),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10, horizontal: 30,
+                    ),
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.deepPurpleAccent
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Não"),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 30,
+                      ),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.redAccent
+                  ),
+                  onPressed: () {
+                    DatabaseMethods().excluirContato(id, context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Sim"),
+                ),
+              ],
+            )
           ],
         ),
       ),
