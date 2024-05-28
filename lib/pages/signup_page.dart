@@ -1,6 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -47,14 +48,9 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment(1.2, -0.9),
-            colors: <Color>[Colors.black, Colors.black, Colors.black, Colors.deepPurple],
-          ),
-        ),
+      backgroundColor: Colors.white,
+      body: Animate(
+        effects: [FadeEffect()],
         child: Center(
           child: SafeArea(
             child: SingleChildScrollView(
@@ -68,7 +64,7 @@ class _SignupPageState extends State<SignupPage> {
                     Text(
                       "Faça o seu cadastro",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 24,
                         fontWeight: FontWeight.bold
                       ),
@@ -81,20 +77,20 @@ class _SignupPageState extends State<SignupPage> {
                       child: TextFormField(
                         textAlignVertical: TextAlignVertical.center,
                         controller: emailController,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.deepPurple),
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(15),
                           ),
                           prefixIcon: Icon(
                             Icons.mail,
-                            color: Colors.white,
+                            color: Colors.deepPurple,
                           ),
-                          fillColor: Colors.grey.shade900,
+                          fillColor: Colors.grey[200],
                           filled: true,
                           labelText: "Email",
-                          labelStyle: TextStyle(color: Colors.grey[500]),
+                          labelStyle: TextStyle(color: Colors.grey[800]),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
@@ -112,20 +108,19 @@ class _SignupPageState extends State<SignupPage> {
                         obscureText: true,
                         textAlignVertical: TextAlignVertical.center,
                         controller: senhaController,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.deepPurple),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           prefixIcon: Icon(
                             Icons.lock,
-                            color: Colors.white,
+                            color: Colors.deepPurple,
                           ),
-                          fillColor: Colors.grey.shade900,
+                          fillColor: Colors.grey[200],
                           filled: true,
                           labelText: "Senha",
-                          labelStyle: TextStyle(color: Colors.grey[500]),
+                          labelStyle: TextStyle(color: Colors.grey[800]),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
@@ -145,20 +140,19 @@ class _SignupPageState extends State<SignupPage> {
                         obscureText: true,
                         textAlignVertical: TextAlignVertical.center,
                         controller: repetirSenhaController,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.deepPurple),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           prefixIcon: Icon(
                             Icons.lock,
-                            color: Colors.white,
+                            color: Colors.deepPurple,
                           ),
-                          fillColor: Colors.grey.shade900,
+                          fillColor: Colors.grey[200],
                           filled: true,
                           labelText: "Repita a sua senha",
-                          labelStyle: TextStyle(color: Colors.grey[500]),
+                          labelStyle: TextStyle(color: Colors.grey[800]),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
@@ -172,23 +166,37 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(
                       height: 30,
                     ),
-                    TextButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          cadastrarUsuario();
-                        }
-                      },
-                      child: Text("Cadastrar"),
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
-                        foregroundColor: Colors.white,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 50,
-                        ),
-                        textStyle: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(25,),),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.deepPurple.withOpacity(0.3),
+                            spreadRadius: 4,
+                            blurRadius: 10,
+                            offset: Offset(0,3),
+                          ),
+                        ],
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            cadastrarUsuario();
+                          }
+                        },
+                        child: Text("Cadastrar"),
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.deepPurple,
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 50,
+                          ),
+                          textStyle: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
@@ -200,7 +208,7 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         Text(
                           "Já possui uma conta?",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                         ),
                         const SizedBox(
                           width: 4,

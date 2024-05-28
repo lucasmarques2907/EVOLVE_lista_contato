@@ -76,18 +76,16 @@ class _AddContactState extends State<AddContact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.deepPurple),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         title: Text("Adicionar contato"),
         titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 21,
-            fontWeight: FontWeight.bold),
+            color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -98,7 +96,7 @@ class _AddContactState extends State<AddContact> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[900],
+                    color: Colors.grey[200],
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15),
@@ -114,21 +112,20 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: nomeController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.person,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Nome",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -152,21 +149,20 @@ class _AddContactState extends State<AddContact> {
                           ],
                           textAlignVertical: TextAlignVertical.center,
                           controller: celularController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.phone,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Celular/Telefone",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -193,34 +189,34 @@ class _AddContactState extends State<AddContact> {
                           ],
                           textAlignVertical: TextAlignVertical.center,
                           controller: cepController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "CEP",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
-                          onChanged: (value) async{
-                            if(value.length ==8 ){
+                          onChanged: (value) async {
+                            if (value.length == 8) {
                               buscaCep(value);
                             }
                           },
                           validator: (value) => value.toString().trim().isEmpty
                               ? null
-                          : value!.length < 8
-                              ? "Digite os 8 dígitos do CEP ou deixe este campo em branco" : null,
+                              : value!.length < 8
+                                  ? "Digite os 8 dígitos do CEP ou deixe este campo em branco"
+                                  : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -230,35 +226,32 @@ class _AddContactState extends State<AddContact> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: TextFormField(
-                          inputFormatters:
-                          <TextInputFormatter>[
+                          inputFormatters: <TextInputFormatter>[
                             UpperCaseTxt(),
                             LengthLimitingTextInputFormatter(2),
                             FilteringTextInputFormatter.allow(RegExp(r'[A-Z]')),
                           ],
                           textAlignVertical: TextAlignVertical.center,
                           controller: estadoController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.deepPurple),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Estado",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onChanged: (value) {
-                            estadoController.value =
-                                TextEditingValue(
-                                    text: value.toUpperCase(),
-                                    selection: estadoController.selection);
+                            estadoController.value = TextEditingValue(
+                                text: value.toUpperCase(),
+                                selection: estadoController.selection);
                           },
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -266,7 +259,8 @@ class _AddContactState extends State<AddContact> {
                           validator: (value) => value.toString().trim().isEmpty
                               ? null
                               : value!.length < 2
-                              ? "Digite a sigla do estado ou deixe este campo em branco" : null,
+                                  ? "Digite a sigla do estado ou deixe este campo em branco"
+                                  : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -278,21 +272,20 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: cidadeController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Cidade",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -300,7 +293,8 @@ class _AddContactState extends State<AddContact> {
                           validator: (value) => value.toString().trim().isEmpty
                               ? null
                               : value!.length < 3
-                              ? "Digite a cidade ou deixe este campo em branco" : null,
+                                  ? "Digite a cidade ou deixe este campo em branco"
+                                  : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -312,21 +306,20 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: bairroController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Bairro",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -334,7 +327,8 @@ class _AddContactState extends State<AddContact> {
                           validator: (value) => value.toString().trim().isEmpty
                               ? null
                               : value!.length < 2
-                              ? "Digite o bairro ou deixe este campo em branco" : null,
+                                  ? "Digite o bairro ou deixe este campo em branco"
+                                  : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -346,21 +340,20 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: ruaController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
                             errorMaxLines: 2,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Rua",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -368,7 +361,8 @@ class _AddContactState extends State<AddContact> {
                           validator: (value) => value.toString().trim().isEmpty
                               ? null
                               : value!.length < 2
-                              ? "Digite a rua ou deixe este campo em branco" : null,
+                                  ? "Digite a rua ou deixe este campo em branco"
+                                  : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -380,20 +374,19 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: numeroController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Número",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -410,20 +403,19 @@ class _AddContactState extends State<AddContact> {
                         child: TextFormField(
                           textAlignVertical: TextAlignVertical.center,
                           controller: complementoController,
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.deepPurple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             prefixIcon: Icon(
                               Icons.location_on,
-                              color: Colors.white,
+                              color: Colors.deepPurple,
                             ),
-                            fillColor: Colors.grey.shade800,
+                            fillColor: Colors.grey[200],
                             filled: true,
                             labelText: "Complemento",
-                            labelStyle: TextStyle(color: Colors.grey[500]),
+                            labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
@@ -441,7 +433,7 @@ class _AddContactState extends State<AddContact> {
               ),
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 25),
-                tileColor: Colors.black,
+                tileColor: Colors.white,
                 title: Row(
                   children: [
                     Expanded(
@@ -462,7 +454,7 @@ class _AddContactState extends State<AddContact> {
                     ),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: (){
+                        onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             salvarContato();
                           }
@@ -489,7 +481,7 @@ class _AddContactState extends State<AddContact> {
 class UpperCaseTxt extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-  TextEditingValue txtAntigo, TextEditingValue txtNovo){
+      TextEditingValue txtAntigo, TextEditingValue txtNovo) {
     return txtNovo.copyWith(text: txtNovo.text.toUpperCase());
   }
 }

@@ -20,11 +20,11 @@ class _ContactPageState extends State<ContactPage> {
       BuildContext context, String label, String content) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.only(left: 20, right: 10),
         child: InputDecorator(
           decoration: InputDecoration(
             labelText: label,
-            labelStyle: TextStyle(color: Colors.grey.shade400),
+            labelStyle: TextStyle(color: Colors.grey.shade700),
             border: InputBorder.none,
             suffixIcon: GestureDetector(
               child: Icon(Icons.copy, color: Colors.deepPurple),
@@ -44,7 +44,7 @@ class _ContactPageState extends State<ContactPage> {
           ),
           child: Text(
             content,
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.black, fontSize: 18),
           ),
         ),
       ),
@@ -54,7 +54,7 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.deepPurple),
@@ -63,8 +63,8 @@ class _ContactPageState extends State<ContactPage> {
         centerTitle: true,
         title: Text("Detalhes"),
         titleTextStyle: TextStyle(
-            color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold),
-        backgroundColor: Colors.black,
+            color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold),
+        backgroundColor: Colors.white,
       ),
       body: SafeArea(
         child: Column(
@@ -72,7 +72,7 @@ class _ContactPageState extends State<ContactPage> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[900],
+                  color: Colors.grey[200],
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
@@ -114,7 +114,7 @@ class _ContactPageState extends State<ContactPage> {
                                       child: Text(
                                         data["nome"],
                                         style: TextStyle(
-                                          color: Colors.white,
+                                          color: Colors.black,
                                           fontSize: 24,
                                         ),
                                         textAlign: TextAlign.center,
@@ -124,7 +124,7 @@ class _ContactPageState extends State<ContactPage> {
                                     Text(
                                       data["celular"],
                                       style: TextStyle(
-                                          color: Colors.grey.shade500,
+                                          color: Colors.grey.shade800,
                                           fontSize: 18),
                                       textAlign: TextAlign.center,
                                     ),
@@ -133,30 +133,28 @@ class _ContactPageState extends State<ContactPage> {
                                       children: [
                                         _buildInfoContainer(
                                             context, "Nome", data["nome"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(context, "Celular",
                                             data["celular"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "CEP", data["cep"]),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "Estado", data["uf"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "Cidade", data["cidade"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "Bairro", data["bairro"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "Rua", data["rua"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(
                                             context, "Número", data["numero"]),
-                                        SizedBox(height: 5),
+                                        buildDivider(),
                                         _buildInfoContainer(context,
                                             "Complemento", data["complemento"]),
                                         SizedBox(height: 5),
@@ -173,16 +171,16 @@ class _ContactPageState extends State<ContactPage> {
             ),
             ListTile(
               contentPadding: EdgeInsets.symmetric(horizontal: 25),
-              tileColor: Colors.black,
+              tileColor: Colors.white,
               title: Row(
                 children: [
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        // DatabaseMethods().excluirContato(widget.id, context);
                         showDialog(
                             context: context,
-                            builder: (context) => CustomDialogWidget(id: widget.id.toString()));
+                            builder: (context) =>
+                                CustomDialogWidget(id: widget.id.toString()));
                       },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent),
@@ -223,19 +221,29 @@ class _ContactPageState extends State<ContactPage> {
       ),
     );
   }
+
+  Divider buildDivider() {
+    return const Divider(
+      color: Colors.deepPurple,
+      indent: 20,
+      endIndent: 20,
+    );
+  }
 }
 
 class CustomDialogWidget extends StatelessWidget {
-
   final String id;
 
-  const CustomDialogWidget({super.key,required this.id});
+  const CustomDialogWidget({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 15,),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 15,
+        ),
         decoration: BoxDecoration(
           color: Colors.grey[800],
           borderRadius: BorderRadius.circular(10),
@@ -275,12 +283,12 @@ class CustomDialogWidget extends StatelessWidget {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10, horizontal: 30,
-                    ),
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.deepPurpleAccent
-                  ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 30,
+                      ),
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepPurpleAccent),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -289,11 +297,11 @@ class CustomDialogWidget extends StatelessWidget {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 30,
+                        vertical: 10,
+                        horizontal: 30,
                       ),
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.redAccent
-                  ),
+                      backgroundColor: Colors.redAccent),
                   onPressed: () {
                     DatabaseMethods().excluirContato(id, context);
                     Navigator.pop(context);

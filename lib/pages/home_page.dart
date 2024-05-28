@@ -24,21 +24,46 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.grey.shade300,
+                Colors.white,
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              stops: [0.0, 0.3],
+              tileMode: TileMode.clamp,
+            ),
+          ),
+        ),
         centerTitle: true,
         title: Text("Contatos"),
         titleTextStyle: TextStyle(
-            color: Colors.white, fontSize: 21, fontWeight: FontWeight.bold),
+            color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold),
+        // leading: IconButton(
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => AddContact(),
+        //       ),
+        //     );
+        //   },
+        //   icon: const Icon
+        // ),
         actions: [
           IconButton(
-              onPressed: deslogarUsuario,
-              icon: const Icon(
-                Icons.logout,
-                color: Colors.white,
-              ))
+            onPressed: deslogarUsuario,
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.deepPurple,
+            ),
+          ),
         ],
-        backgroundColor: Colors.black,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.deepPurple,
@@ -58,32 +83,37 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextField(
                 onChanged: (value) {
-                  context.read<SearchProvider>().filtrarContatos(pesquisa: value);
+                  context
+                      .read<SearchProvider>()
+                      .filtrarContatos(pesquisa: value);
                   print(context.read<SearchProvider>().nome);
                 },
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.grey[800],
+                  fillColor: Colors.grey[300],
                   hintText: "Pesquisar contato",
                   hintStyle:
                       TextStyle(fontSize: 17, color: Colors.grey.shade500),
                   suffixIcon: const Icon(
                     Icons.search,
                     size: 26,
-                    color: Colors.white,
+                    color: Colors.deepPurple,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15),
                     ),
+                    borderSide: BorderSide(width: 0, style: BorderStyle.none),
                   ),
                 ),
                 onTapOutside: (event) {
                   FocusManager.instance.primaryFocus?.unfocus();
                 }),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -105,10 +135,13 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               var data = snapshots.data!.docs[index].data()
                                   as Map<String, dynamic>;
-                              if (context.watch<SearchProvider>().nome.trim().isEmpty) {
+                              if (context
+                                  .watch<SearchProvider>()
+                                  .nome
+                                  .trim()
+                                  .isEmpty) {
                                 return Column(
                                   children: [
-                                    // SizedBox(height: 5,),
                                     ListTile(
                                       splashColor: Colors.deepPurple,
                                       leading: ProfilePicture(
@@ -139,12 +172,14 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       tileColor: Colors.grey.shade900,
                                       shape: RoundedRectangleBorder(
-                                        side: BorderSide(
-                                            color: Colors.deepPurple, width: 2),
-                                        borderRadius: BorderRadius.circular(10),
+                                        // side: BorderSide(
+                                        // color: Colors.deepPurple, width: 1.5),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                     ),
-                                    SizedBox(height: 5,),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                   ],
                                 );
                               }
@@ -152,14 +187,19 @@ class _HomePageState extends State<HomePage> {
                                       .toString()
                                       .toLowerCase()
                                       .toString()
-                                      .startsWith(context.read<SearchProvider>().nome.toLowerCase()) ||
+                                      .startsWith(context
+                                          .read<SearchProvider>()
+                                          .nome
+                                          .toLowerCase()) ||
                                   data["nome"]
                                       .toString()
                                       .toLowerCase()
-                                      .contains(context.read<SearchProvider>().nome.toLowerCase())) {
+                                      .contains(context
+                                          .read<SearchProvider>()
+                                          .nome
+                                          .toLowerCase())) {
                                 return Column(
                                   children: [
-                                    // SizedBox(height: 5,),
                                     ListTile(
                                       splashColor: Colors.deepPurple,
                                       leading: ProfilePicture(
@@ -195,7 +235,9 @@ class _HomePageState extends State<HomePage> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                     ),
-                                    SizedBox(height: 5,),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
                                   ],
                                 );
                               }
