@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lista_contatos/pages/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lista_contatos/providers/search_provider.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -9,7 +11,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -18,9 +19,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AuthPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => SearchProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: AuthPage(),
+      ),
     );
   }
 }

@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(value: null,),
         );
       },
     );

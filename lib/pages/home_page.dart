@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:lista_contatos/pages/add_contact.dart';
 import 'package:lista_contatos/pages/contact_page.dart';
+import 'package:lista_contatos/providers/search_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,9 +57,10 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             TextField(
-                onChanged: (value) => setState(() {
-                      pesquisa = value;
-                    }),
+                onChanged: (value) {
+                  context.read<SearchProvider>().filtrarContatos(pesquisa: value);
+                  print(context.read<SearchProvider>().nome);
+                },
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
@@ -102,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               var data = snapshots.data!.docs[index].data()
                                   as Map<String, dynamic>;
-                              if (pesquisa.trim().isEmpty) {
+                              if (context.watch<SearchProvider>().nome.trim().isEmpty) {
                                 return Column(
                                   children: [
                                     // SizedBox(height: 5,),
@@ -149,48 +152,54 @@ class _HomePageState extends State<HomePage> {
                                       .toString()
                                       .toLowerCase()
                                       .toString()
-                                      .startsWith(pesquisa.toLowerCase()) ||
+                                      .startsWith(context.read<SearchProvider>().nome.toLowerCase()) ||
                                   data["nome"]
                                       .toString()
                                       .toLowerCase()
-                                      .contains(pesquisa.toLowerCase())) {
-                                return ListTile(
-                                  splashColor: Colors.deepPurple,
-                                  leading: ProfilePicture(
-                                    name: data["nome"],
-                                    radius: 20,
-                                    fontsize: 18,
-                                  ),
-                                  title: Text(
-                                    data["nome"],
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        overflow: TextOverflow.ellipsis),
-                                  ),
-                                  subtitle: Text(
-                                    data["celular"],
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ContactPage(
-                                          id: data["id"].toString(),
-                                        ),
+                                      .contains(context.read<SearchProvider>().nome.toLowerCase())) {
+                                return Column(
+                                  children: [
+                                    // SizedBox(height: 5,),
+                                    ListTile(
+                                      splashColor: Colors.deepPurple,
+                                      leading: ProfilePicture(
+                                        name: data["nome"],
+                                        radius: 20,
+                                        fontsize: 18,
                                       ),
-                                    );
-                                  },
-                                  tileColor: Colors.grey.shade900,
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(
-                                        color: Colors.deepPurple, width: 2),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                      title: Text(
+                                        data["nome"],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      subtitle: Text(
+                                        data["celular"],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ContactPage(
+                                              id: data["id"].toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      tileColor: Colors.grey.shade900,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.deepPurple, width: 2),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5,),
+                                  ],
                                 );
                               }
-                              return SizedBox(height: 75,);
+                              return Container();
                             });
                   },
                 ),
@@ -201,6 +210,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  String pesquisa = "";
 }
