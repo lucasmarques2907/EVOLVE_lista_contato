@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
+                        obscureText: true,
                         textAlignVertical: TextAlignVertical.center,
                         controller: senhaController,
                         style: TextStyle(color: Colors.white),

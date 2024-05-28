@@ -116,6 +116,7 @@ class _AddContactState extends State<AddContact> {
                           controller: nomeController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.deepPurple),
@@ -194,6 +195,7 @@ class _AddContactState extends State<AddContact> {
                           controller: cepController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.deepPurple),
@@ -215,9 +217,10 @@ class _AddContactState extends State<AddContact> {
                               buscaCep(value);
                             }
                           },
-                          validator: (value) => value.toString().trim().isEmpty || value!.length < 8
-                              ? "Digite os 8 dígitos do CEP"
-                              : null,
+                          validator: (value) => value.toString().trim().isEmpty
+                              ? null
+                          : value!.length < 8
+                              ? "Digite os 8 dígitos do CEP ou deixe este campo em branco" : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -237,6 +240,7 @@ class _AddContactState extends State<AddContact> {
                           controller: estadoController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                               BorderSide(color: Colors.deepPurple),
@@ -260,8 +264,9 @@ class _AddContactState extends State<AddContact> {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
                           validator: (value) => value.toString().trim().isEmpty
-                              ? "Digite apenas a sigla do estado!"
-                              : null,
+                              ? null
+                              : value!.length < 2
+                              ? "Digite a sigla do estado ou deixe este campo em branco" : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -275,6 +280,7 @@ class _AddContactState extends State<AddContact> {
                           controller: cidadeController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                               BorderSide(color: Colors.deepPurple),
@@ -292,8 +298,9 @@ class _AddContactState extends State<AddContact> {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
                           validator: (value) => value.toString().trim().isEmpty
-                              ? "Este campo não pode ficar vazio!"
-                              : null,
+                              ? null
+                              : value!.length < 3
+                              ? "Digite a cidade ou deixe este campo em branco" : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -307,6 +314,7 @@ class _AddContactState extends State<AddContact> {
                           controller: bairroController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                               BorderSide(color: Colors.deepPurple),
@@ -324,8 +332,9 @@ class _AddContactState extends State<AddContact> {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
                           validator: (value) => value.toString().trim().isEmpty
-                              ? "Este campo não pode ficar vazio!"
-                              : null,
+                              ? null
+                              : value!.length < 2
+                              ? "Digite o bairro ou deixe este campo em branco" : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -339,6 +348,7 @@ class _AddContactState extends State<AddContact> {
                           controller: ruaController,
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
+                            errorMaxLines: 2,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                               BorderSide(color: Colors.deepPurple),
@@ -356,8 +366,9 @@ class _AddContactState extends State<AddContact> {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
                           validator: (value) => value.toString().trim().isEmpty
-                              ? "Este campo não pode ficar vazio!"
-                              : null,
+                              ? null
+                              : value!.length < 2
+                              ? "Digite a rua ou deixe este campo em branco" : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),
@@ -387,9 +398,7 @@ class _AddContactState extends State<AddContact> {
                           onTapOutside: (event) {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
-                          validator: (value) => value.toString().trim().isEmpty
-                              ? "Este campo não pode ficar vazio!"
-                              : null,
+                          validator: (value) => null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
                       ),

@@ -19,8 +19,6 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.signOut();
   }
 
-  String name = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +56,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextField(
                 onChanged: (value) => setState(() {
-                      name = value;
+                      pesquisa = value;
                     }),
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
@@ -82,9 +80,7 @@ class _HomePageState extends State<HomePage> {
                 onTapOutside: (event) {
                   FocusManager.instance.primaryFocus?.unfocus();
                 }),
-            SizedBox(
-              height: 5,
-            ),
+            SizedBox(height: 5,),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -106,7 +102,58 @@ class _HomePageState extends State<HomePage> {
                             itemBuilder: (context, index) {
                               var data = snapshots.data!.docs[index].data()
                                   as Map<String, dynamic>;
-                              if (name.trim().isEmpty) {
+                              if (pesquisa.trim().isEmpty) {
+                                return Column(
+                                  children: [
+                                    // SizedBox(height: 5,),
+                                    ListTile(
+                                      splashColor: Colors.deepPurple,
+                                      leading: ProfilePicture(
+                                        name: data["nome"],
+                                        radius: 20,
+                                        fontsize: 18,
+                                      ),
+                                      title: Text(
+                                        data["nome"],
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                      subtitle: Text(
+                                        data["celular"],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => ContactPage(
+                                              id: data["id"].toString(),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      tileColor: Colors.grey.shade900,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                            color: Colors.deepPurple, width: 2),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    SizedBox(height: 5,),
+                                  ],
+                                );
+                              }
+                              if (data["nome"]
+                                      .toString()
+                                      .toLowerCase()
+                                      .toString()
+                                      .startsWith(pesquisa.toLowerCase()) ||
+                                  data["nome"]
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(pesquisa.toLowerCase())) {
                                 return ListTile(
                                   splashColor: Colors.deepPurple,
                                   leading: ProfilePicture(
@@ -143,37 +190,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 );
                               }
-                              if (data["nome"]
-                                      .toString()
-                                      .toLowerCase()
-                                      .toString()
-                                      .startsWith(name.toLowerCase()) ||
-                                  data["nome"]
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(name.toLowerCase())) {
-                                return ListTile(
-                                  title: Text(
-                                    data["nome"],
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  subtitle: Text(
-                                    data["celular"],
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => ContactPage(
-                                          id: data["id"].toString(),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                              return Container();
+                              return SizedBox(height: 75,);
                             });
                   },
                 ),
@@ -184,4 +201,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  String pesquisa = "";
 }

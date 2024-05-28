@@ -109,6 +109,7 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
+                        obscureText: true,
                         textAlignVertical: TextAlignVertical.center,
                         controller: senhaController,
                         style: TextStyle(color: Colors.white),
@@ -141,6 +142,7 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
+                        obscureText: true,
                         textAlignVertical: TextAlignVertical.center,
                         controller: repetirSenhaController,
                         style: TextStyle(color: Colors.white),
