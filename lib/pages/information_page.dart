@@ -76,6 +76,10 @@ class InformationPage extends StatelessWidget {
                 ),
                 buildRowPacoteNome("flutter_launcher_icons", "0.13.1"),
                 SizedBox(
+                  height: 5,
+                ),
+                buildRowPacoteNome("flutter_multi_formatter", "2.12.8"),
+                SizedBox(
                   height: 20,
                 ),
               ],

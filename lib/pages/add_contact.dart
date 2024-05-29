@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -59,10 +60,6 @@ class _AddContactState extends State<AddContact> {
     http.Response resposta;
 
     resposta = await http.get(Uri.parse(url));
-
-    // print("Resposta: " + resposta.body);
-
-    // print("StatusCode: "+ resposta.statusCode.toString());
 
     Map<String, dynamic> dadosCep = json.decode(resposta.body);
 
@@ -143,9 +140,10 @@ class _AddContactState extends State<AddContact> {
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: TextFormField(
                           keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                            FilteringTextInputFormatter.digitsOnly
+                          inputFormatters: [
+                            PhoneInputFormatter(
+                                allowEndlessPhone: false,
+                                defaultCountryCode: 'BR')
                           ],
                           textAlignVertical: TextAlignVertical.center,
                           controller: celularController,
@@ -161,7 +159,7 @@ class _AddContactState extends State<AddContact> {
                             ),
                             fillColor: Colors.grey[200],
                             filled: true,
-                            labelText: "Celular/Telefone",
+                            labelText: "Celular",
                             labelStyle: TextStyle(color: Colors.grey[800]),
                           ),
                           onTapOutside: (event) {
@@ -169,8 +167,8 @@ class _AddContactState extends State<AddContact> {
                           },
                           validator: (value) => value.toString().isEmpty
                               ? "Este campo não pode ficar vazio!"
-                              : value!.length < 3
-                                  ? "O númeo de celular/telefone precisa ter no mínimo 3 dígitos"
+                              : value!.length < 15 || value![5] != "9"
+                                  ? "Digite um número de celular válido"
                                   : null,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),

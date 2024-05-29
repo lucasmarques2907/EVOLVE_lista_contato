@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:lista_contatos/pages/add_contact.dart';
 import 'package:lista_contatos/service/database.dart';
 import 'package:http/http.dart' as http;
@@ -164,25 +165,21 @@ class _EditContactState extends State<EditContact> {
                                         height: 10,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 25.0),
+                                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
                                         child: TextFormField(
                                           keyboardType: TextInputType.number,
-                                          inputFormatters: <TextInputFormatter>[
-                                            FilteringTextInputFormatter.allow(
-                                                RegExp(r'[0-9]')),
-                                            FilteringTextInputFormatter
-                                                .digitsOnly
+                                          inputFormatters: [
+                                            PhoneInputFormatter(
+                                                allowEndlessPhone: false,
+                                                defaultCountryCode: 'BR')
                                           ],
-                                          textAlignVertical:
-                                              TextAlignVertical.center,
+                                          textAlignVertical: TextAlignVertical.center,
                                           controller: celularController,
                                           style: TextStyle(color: Colors.black),
                                           decoration: InputDecoration(
                                             errorMaxLines: 2,
                                             border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
+                                              borderRadius: BorderRadius.circular(15),
                                             ),
                                             prefixIcon: Icon(
                                               Icons.phone,
@@ -190,23 +187,18 @@ class _EditContactState extends State<EditContact> {
                                             ),
                                             fillColor: Colors.grey[200],
                                             filled: true,
-                                            labelText: "Celular/Telefone",
-                                            labelStyle: TextStyle(
-                                                color: Colors.grey[800]),
+                                            labelText: "Celular",
+                                            labelStyle: TextStyle(color: Colors.grey[800]),
                                           ),
                                           onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
+                                            FocusManager.instance.primaryFocus?.unfocus();
                                           },
-                                          validator: (value) => value
-                                                  .toString()
-                                                  .isEmpty
+                                          validator: (value) => value.toString().isEmpty
                                               ? "Este campo não pode ficar vazio!"
-                                              : value!.length < 3
-                                                  ? "O númeo de celular/telefone precisa ter no mínimo 3 dígitos"
-                                                  : null,
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
+                                              : value!.length < 15 || value![5] != "9"
+                                              ? "Digite um número de celular válido"
+                                              : null,
+                                          autovalidateMode: AutovalidateMode.onUserInteraction,
                                         ),
                                       ),
                                       SizedBox(

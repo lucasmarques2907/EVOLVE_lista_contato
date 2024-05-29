@@ -54,8 +54,10 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           },
-          icon: const Icon(Icons.info_outline_rounded,
-          color: Colors.deepPurple,),
+          icon: const Icon(
+            Icons.info_outline_rounded,
+            color: Colors.deepPurple,
+          ),
         ),
         actions: [
           IconButton(
@@ -127,11 +129,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, snapshots) {
                     return (snapshots.connectionState ==
                             ConnectionState.waiting)
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.deepPurple,
-                            ),
-                          )
+                        ? Container()
                         : ListView.builder(
                             itemCount: snapshots.data!.docs.length,
                             itemBuilder: (context, index) {

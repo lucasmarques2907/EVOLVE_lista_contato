@@ -23,11 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(
-            value: null,
-          ),
-        );
+        return Center(child: CircularProgressIndicator());
       },
     );
 
@@ -36,9 +32,8 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: senhaController.text,
       );
-      if (mounted) {
-        Navigator.pop(context);
-      }
+
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == "invalid-credential") {
@@ -119,6 +114,13 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
+  bool visibilidadeSenha = true;
+
+  @override
+  void initState() {
+    visibilidadeSenha = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,7 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
-                        obscureText: true,
+                        obscureText: visibilidadeSenha ? true : false,
                         textAlignVertical: TextAlignVertical.center,
                         controller: senhaController,
                         style: TextStyle(color: Colors.black),
@@ -191,6 +193,19 @@ class _LoginPageState extends State<LoginPage> {
                           filled: true,
                           labelText: "Senha",
                           labelStyle: TextStyle(color: Colors.grey[800]),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              visibilidadeSenha
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.deepPurple,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visibilidadeSenha = !visibilidadeSenha;
+                              });
+                            },
+                          ),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();

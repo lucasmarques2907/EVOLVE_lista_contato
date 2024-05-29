@@ -45,6 +45,7 @@ dependencies:
   email_validator: ^2.1.17
   flutter_animate: ^4.5.0
   flutter_launcher_icons: ^0.13.1
+  flutter_multi_formatter: ^2.12.8
 
 flutter_launcher_icons:
   android: "launcher_icon"

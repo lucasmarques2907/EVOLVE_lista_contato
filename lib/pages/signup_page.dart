@@ -23,26 +23,30 @@ class _SignupPageState extends State<SignupPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
+        return Center(child: CircularProgressIndicator());
       },
     );
 
-    try{
+    try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: senhaController.text,
       );
-      if(mounted){
-        Navigator.pop(context);
-      }
+
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-    if (e.code == "email-already-in-use"){
-     mostrarMsgErro("Email em uso", "Este email já está cadastrado");
+      if (e.code == "email-already-in-use") {
+        mostrarMsgErro("Email em uso", "Este email já está cadastrado");
+      }
     }
-    }
+  }
+
+  bool visibilidadeSenha = true;
+
+  @override
+  void initState() {
+    visibilidadeSenha = true;
   }
 
   void mostrarMsgErro(String tituloMensagem, String mensagem) {
@@ -174,7 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
-                        obscureText: true,
+                        obscureText: visibilidadeSenha ? true : false,
                         textAlignVertical: TextAlignVertical.center,
                         controller: senhaController,
                         style: TextStyle(color: Colors.black),
@@ -190,6 +194,19 @@ class _SignupPageState extends State<SignupPage> {
                           filled: true,
                           labelText: "Senha",
                           labelStyle: TextStyle(color: Colors.grey[800]),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              visibilidadeSenha
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.deepPurple,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visibilidadeSenha = !visibilidadeSenha;
+                              });
+                            },
+                          ),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
@@ -206,7 +223,7 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
                       child: TextFormField(
-                        obscureText: true,
+                        obscureText: visibilidadeSenha ? true : false,
                         textAlignVertical: TextAlignVertical.center,
                         controller: repetirSenhaController,
                         style: TextStyle(color: Colors.black),
@@ -222,6 +239,19 @@ class _SignupPageState extends State<SignupPage> {
                           filled: true,
                           labelText: "Repita a sua senha",
                           labelStyle: TextStyle(color: Colors.grey[800]),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              visibilidadeSenha
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: Colors.deepPurple,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                visibilidadeSenha = !visibilidadeSenha;
+                              });
+                            },
+                          ),
                         ),
                         onTapOutside: (event) {
                           FocusManager.instance.primaryFocus?.unfocus();
