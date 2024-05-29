@@ -33,13 +33,14 @@ class _LoginPageState extends State<LoginPage> {
         password: senhaController.text,
       );
 
-      Navigator.pop(context);
+      // Navigator.pop(context);
+
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       if (e.code == "invalid-credential") {
         mostrarMsgErro("Login incorreto",
             "Confira se seu email e sua senha estão corretos");
       }
+      // Navigator.pop(context);
     }
   }
 

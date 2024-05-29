@@ -33,9 +33,7 @@ class _SignupPageState extends State<SignupPage> {
         password: senhaController.text,
       );
 
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       if (e.code == "email-already-in-use") {
         mostrarMsgErro("Email em uso", "Este email já está cadastrado");
       }
