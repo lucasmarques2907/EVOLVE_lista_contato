@@ -20,12 +20,12 @@ class _SignupPageState extends State<SignupPage> {
   final repetirSenhaController = TextEditingController();
 
   void cadastrarUsuario() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return Center(child: CircularProgressIndicator());
+    //   },
+    // );
 
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(

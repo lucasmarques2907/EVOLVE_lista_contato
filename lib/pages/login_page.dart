@@ -20,12 +20,12 @@ class _LoginPageState extends State<LoginPage> {
   final senhaController = TextEditingController();
 
   void logarUsuario() async {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return Center(child: CircularProgressIndicator());
+    //   },
+    // );
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
