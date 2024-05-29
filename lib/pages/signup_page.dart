@@ -8,7 +8,7 @@ final _formKey = GlobalKey<FormState>();
 class SignupPage extends StatefulWidget {
   final Function()? onTap;
 
-  SignupPage({super.key, required this.onTap});
+  const SignupPage({super.key, required this.onTap});
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -29,12 +29,83 @@ class _SignupPageState extends State<SignupPage> {
       },
     );
 
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailController.text,
-      password: senhaController.text,
-    );
+    try{
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: senhaController.text,
+      );
+      if(mounted){
+        Navigator.pop(context);
+      }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+    if (e.code == "email-already-in-use"){
+     mostrarMsgErro("Email em uso", "Este email já está cadastrado");
+    }
+    }
+  }
 
-    Navigator.pop(context);
+  void mostrarMsgErro(String tituloMensagem, String mensagem) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  size: 72,
+                  color: Colors.deepPurple,
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(tituloMensagem,
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                    textAlign: TextAlign.center),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  mensagem,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300, color: Colors.white),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "OK",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 50,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   String? validarEmail(String email) {
@@ -64,10 +135,9 @@ class _SignupPageState extends State<SignupPage> {
                     Text(
                       "Faça o seu cadastro",
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(
                       height: 30,
@@ -80,8 +150,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: TextStyle(color: Colors.black),
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(15),
                           ),
                           prefixIcon: Icon(
                             Icons.mail,
@@ -169,13 +238,17 @@ class _SignupPageState extends State<SignupPage> {
                     Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(25,),),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(
+                            25,
+                          ),
+                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.deepPurple.withOpacity(0.3),
                             spreadRadius: 4,
                             blurRadius: 10,
-                            offset: Offset(0,3),
+                            offset: Offset(0, 3),
                           ),
                         ],
                       ),

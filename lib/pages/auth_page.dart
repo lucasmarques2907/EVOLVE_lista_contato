@@ -13,14 +13,24 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           //usuário está logado
-          if(snapshot.hasData){
+          if (snapshot.hasData) {
             return HomePage();
-          }else{
+          } else {
             //usuário não está logado
             return LoginOrSignupPage();
           }
         },
       ),
     );
+  }
+}
+
+class AuthService {
+  Future<void> enviarEmailRecuperacaoSenha(String email) async {
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

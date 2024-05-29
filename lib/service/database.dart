@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DatabaseMethods {
   Future excluirContato(String id, context)async{
     await FirebaseFirestore.instance.collection("Contato").doc(id).delete();
-    return Navigator.of(context).pop();
+    return Navigator.of(context).pop(context);
   }
 
   Future atualizarContato(String id, Map<String, dynamic> atualizarInfo, context) async {

@@ -10,10 +10,9 @@ class LoginOrSignupPage extends StatefulWidget {
 }
 
 class _LoginOrSignupPageState extends State<LoginOrSignupPage> {
-
   bool mostrarPaginaLogin = true;
 
-  void trocarTelas(){
+  void trocarTelas() {
     setState(() {
       mostrarPaginaLogin = !mostrarPaginaLogin;
     });
@@ -21,11 +20,11 @@ class _LoginOrSignupPageState extends State<LoginOrSignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (mostrarPaginaLogin){
+    if (mostrarPaginaLogin) {
       return LoginPage(
         onTap: trocarTelas,
       );
-    }else{
+    } else {
       return SignupPage(
         onTap: trocarTelas,
       );

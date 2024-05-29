@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:lista_contatos/pages/add_contact.dart';
 import 'package:lista_contatos/pages/contact_page.dart';
+import 'package:lista_contatos/pages/information_page.dart';
 import 'package:lista_contatos/providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -44,17 +45,18 @@ class _HomePageState extends State<HomePage> {
         title: Text("Contatos"),
         titleTextStyle: TextStyle(
             color: Colors.black, fontSize: 21, fontWeight: FontWeight.bold),
-        // leading: IconButton(
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => AddContact(),
-        //       ),
-        //     );
-        //   },
-        //   icon: const Icon
-        // ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => InformationPage(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.info_outline_rounded,
+          color: Colors.deepPurple,),
+        ),
         actions: [
           IconButton(
             onPressed: deslogarUsuario,

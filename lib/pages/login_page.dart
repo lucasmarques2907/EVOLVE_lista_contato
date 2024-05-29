@@ -2,6 +2,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lista_contatos/pages/forgot_password_page.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -41,12 +42,13 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       if (e.code == "invalid-credential") {
-        mostrarMsgErro("Login incorreto");
+        mostrarMsgErro("Login incorreto",
+            "Confira se seu email e sua senha estão corretos");
       }
     }
   }
 
-  void mostrarMsgErro(String message) {
+  void mostrarMsgErro(String tituloMensagem, String mensagem) {
     showDialog(
       context: context,
       builder: (context) {
@@ -68,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 5,
                 ),
-                Text(message,
+                Text(tituloMensagem,
                     style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -77,8 +79,8 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 5,
                 ),
-                const Text(
-                  "Confira se seu email e sua senha estão corretos",
+                Text(
+                  mensagem,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.w300, color: Colors.white),
@@ -96,7 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
-                    padding: EdgeInsets.symmetric(horizontal: 50,),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 50,
+                    ),
                   ),
                 ),
               ],
@@ -197,6 +201,24 @@ class _LoginPageState extends State<LoginPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
                     ),
+                    SizedBox(
+                      height: 0,
+                    ),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 25),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgotPasswordPage(),
+                                    ));
+                              },
+                              child: Text("Esqueci minha senha")),
+                        )),
                     const SizedBox(
                       height: 20,
                     ),

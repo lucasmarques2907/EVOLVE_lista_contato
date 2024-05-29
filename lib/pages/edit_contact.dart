@@ -281,8 +281,7 @@ class _EditContactState extends State<EditContact> {
                                           textAlignVertical:
                                               TextAlignVertical.center,
                                           controller: estadoController,
-                                          style: TextStyle(
-                                              color: Colors.deepPurple),
+                                          style: TextStyle(color: Colors.black),
                                           decoration: InputDecoration(
                                             errorMaxLines: 2,
                                             border: OutlineInputBorder(

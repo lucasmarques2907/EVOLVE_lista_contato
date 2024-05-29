@@ -303,8 +303,8 @@ class CustomDialogWidget extends StatelessWidget {
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.redAccent),
                   onPressed: () {
-                    DatabaseMethods().excluirContato(id, context);
                     Navigator.pop(context);
+                    DatabaseMethods().excluirContato(id, context);
                   },
                   child: const Text("Sim"),
                 ),
